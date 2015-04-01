@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sample | Signup</title>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='foundation.min.css') }}">
+</head>
+<body>
+
+	<br/>
+
+	<form action="" method="post">
+		<div class="row">
+			<div class="large-6 large-centered columns text-center">
+				<div class="panel clearfix">
+					<h3>Welcome!</h3>
+					<p>Please fill up all fields.</p>
+					{% if error %}
+						<p class="tiny">{{ error }}</p>
+					{% endif %}
+					<br/>
+					<div class="row">
+						<div class="large-9 large-centered columns">
+							<input type="text" name="username" placeholder="Username" required="true">
+						</div>
+					</div>
+					<div class="row">
+						<div class="large-9 large-centered columns">
+							<input type="password" name="password" placeholder="Password" required="true">
+						</div>
+					</div>
+					<div class="row">
+						<div class="large-9 large-centered columns">
+							<input type="submit" value="SIGN UP" class="button radius small">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </form>
+
+</body>
+</html>
