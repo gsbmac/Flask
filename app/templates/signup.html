@@ -3,6 +3,7 @@
 <head>
 	<title>Sample | Signup</title>
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='foundation.min.css') }}">
+	<script type=text/javascript src="{{ url_for('static', filename='jquery.js') }}"></script>
 </head>
 <body>
 
@@ -12,12 +13,10 @@
 		<div class="row">
 			<div class="large-6 large-centered columns text-center">
 				<div class="panel clearfix">
-					<h3>Welcome!</h3>
+					<h3>REGISTER</h3>
+					<hr/>
 					<p>Please fill up all fields.</p>
-					{% if error %}
-						<p class="tiny">{{ error }}</p>
-					{% endif %}
-					<br/>
+
 					<div class="row">
 						<div class="large-9 large-centered columns">
 							<input type="text" name="username" placeholder="Username" required="true">
@@ -28,6 +27,18 @@
 							<input type="password" name="password" placeholder="Password" required="true">
 						</div>
 					</div>
+
+					{% if error %}
+						<div class="row">
+							<div class="large-9 large-centered columns">
+								<div data-alert class="alert-box alert radius">
+									{{ error }}
+									<a href="#" class="close">&times;</a>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+
 					<div class="row">
 						<div class="large-9 large-centered columns">
 							<input type="submit" value="SIGN UP" class="button radius small">
@@ -37,6 +48,12 @@
 			</div>
 		</div>
     </form>
+
+    <script type=text/javascript src="{{ url_for('static', filename='foundation.min.js') }}"></script>
+    <script type=text/javascript src="{{ url_for('static', filename='foundation.alert.js') }}"></script>
+	<script>
+		$(document).foundation();
+	</script>
 
 </body>
 </html>
