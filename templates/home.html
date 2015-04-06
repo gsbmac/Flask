@@ -42,7 +42,7 @@
 			<section class="main-section">
 				<!-- content goes here -->
 				<br/>
-				<div class="row text-center">
+				<div class="row">
 					{% if success %}
 						<div class="large-12 large-centered columns">
 							<div class="alert-box success">
@@ -52,31 +52,60 @@
 					{% endif %}
 					
 					<div class="large-12 large-centered columns">
-						<table>
-							<thead>
-								<tr>
-									<th width="200">ID</th>
-									<th width="300">Username</th>
-									<th width="300">Password</th>
-									<th width="200">Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% if users %}
-									{% for user in users %}
-										<tr>
-											<td>{{ user.id }}</td>
-											<td>{{ user.username }}</td>
-											<td>{{ user.password }}</td>
-											<td class="text-center">
-												<a href="home/edit/{{ user.id }}" class="tiny button radius" style="margin:0;">Edit</a>
-												<a href="home/delete/{{ user.id }}" class="tiny button alert radius" style="margin:0;">Delete</a>
-											</td>
-										</tr>
-									{% endfor %}
-								{% endif %}
-							</tbody>
-						</table>
+						<div class="row">
+							{% if items %}
+								{% for item in items %}
+									<div class="large-4 columns text-center">
+										<div class="panel radius">
+		  									<p>
+												<a class="th" href="">
+													<img src="data:image/jpeg;base64,{{ item.image }}" class="image-thumbnail">
+												</a>
+											</p>
+											<h5>{{ item.name }}</h5>
+											<!-- <p class="tiny-text">{{ item.description }}</p> -->
+											<p class="tiny-text">Tags: {{ item.tags }}</p>
+										</div>
+									</div>
+								{% endfor %}
+							{% endif %}
+
+							<a href="#" data-reveal-id="myModal">
+								<div class="large-4 columns text-center">
+									<div class="panel radius" id="add_icon">
+	  									<img src="{{ url_for('static', filename='plus.png') }}"  class="image-thumbnail" id="img_icon">
+									</div>
+								</div>
+							</a>
+
+							<div id="myModal" class="reveal-modal" style="width:500px;" data-reveal>
+								<form action="add/item" method="POST">
+									<div class="row text-center">
+										<h3>Add an Item</h3>
+										<p class="tiny-text">Please fill up all fields.</p>
+										<div class="large-12 large-centered text-center">
+											<label class="text-left">Item Name</label>
+											<input type="text" name="name" required="true" placeholder="Name"/>
+											<label class="text-left">Item Description</label>
+											<input type="text" name="description" placeholder="Description" required="true" />
+											<label class="text-left">Tags (separated by comma)</label>
+											<input type="text" name="tags" placeholder="Tags" required="true"  />
+											<label class="text-left">Category</label>
+											<select name="category">
+												{% for category in categories %}
+													<option value="{{ category.id }}">{{ category.name }}</option>
+												{% endfor %}
+											</select>
+											<input type="file" name="image" accept="image/*">
+
+											<button type="submit" class="small button radius">Add</button>
+										</div>
+										<a class="close-reveal-modal">&#215;</a>
+									</div>
+								</form>
+							</div>
+
+						</div>
 					</div>
 				</div>
 			</section>
@@ -89,8 +118,14 @@
 	<script type=text/javascript src="{{ url_for('static', filename='jquery.min.js') }}"></script>
 	<script type=text/javascript src="{{ url_for('static', filename='foundation.min.js') }}"></script>
 	<script type=text/javascript src="{{ url_for('static', filename='foundation.offcanvas.js') }}"></script>
+	<script type=text/javascript src="{{ url_for('static', filename='foundation.reveal.js') }}"></script>
 	<script>
 		$(document).foundation();
+		$(document).ready(function() {
+			columnW = $(".large-4").width();
+			columnH = $(".large-4").height();
+			$('#add_icon').css({"width":columnW, "height":columnH-"20", "display":"table-cell", "vertical-align":"middle", "padding":"0"})
+		});
 	</script>
 
 </body>

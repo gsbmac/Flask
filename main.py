@@ -4,6 +4,7 @@ import sqlite3, hashlib
 from flask import Flask, request, session, g, redirect, url_for, \
 	 abort, render_template, flash, redirect, escape
 from flaskext.mysql import MySQL
+import base64
 
 # configuration
 mysql = MySQL()
@@ -81,21 +82,24 @@ def signup():
 		
 		return render_template('signup.html', error=error)
 
-@app.route('/home')
+@app.route('/home', methods=['POST', 'GET'])
 def home():
 	if 'username' in session:
 		success = None
 		category = request.args.get('category')
-		cursor.execute('SELECT * FROM tb_user')
-		users = [dict(id=row[0], username=row[1], password=row[2]) for row in cursor.fetchall()]
+		# cursor.execute('SELECT * FROM tb_user')
+		# users = [dict(id=row[0], username=row[1], password=row[2]) for row in cursor.fetchall()]
 
 		cursor.execute("SELECT * FROM tb_category")
 		categories = [dict(id=row[0], name=row[1], description=row[2]) for row in cursor.fetchall()]
 
+		cursor.execute("SELECT * FROM tb_item ORDER BY id")
+		items = [dict(id=int(row[0]), name=row[1], description=row[2], tags=row[3], category=row[4], image=base64.b64encode(row[5])) for row in cursor.fetchall()]
+
 		if 'success' in session:
 			success = escape(session['success'])
 			session.pop('success', None)
-		return render_template('home.html', users=users, categories=categories, success=success)
+		return render_template('home.html', items=items, categories=categories, success=success)
 	
 	return redirect(url_for('index'))
 
@@ -107,6 +111,31 @@ def delete_user(id):
 		session['success'] = "User successfully deleted!"
 		return redirect(url_for('home'))
 
+	return redirect(url_for('index'))
+
+@app.route('/add/item', methods=['POST'])
+def add_item():
+	if 'username' in session:
+		if request.method == 'POST':
+			params = {}
+			params['name'] = str(request.form['name'])
+			params['description'] = str(request.form['description'])
+			params['tags'] = str(request.form['tags'])
+			params['category'] = request.form['category']
+			params['image'] = request.form['image']
+			# params['image'] = MySQLdb.escape_string(request.form['image'])
+
+			# filename = request.files['image']
+			# print "The image is %s"%params['image']
+			# cursor.execute("INSERT INTO tb_item (name,description,tags,category) VALUES('"+params['name']+"','"+params['description']+"','"+params['tags']+"','"+params['category']+"')")
+			# conn.commit()
+
+			# cursor.execute("SELECT MAX(id) FROM tb_item")
+			# maxnum = cursor.fetchone()
+			
+			# cursor.execute("UPDATE SET image=LOAD_FILE('"+filename+"') WHERE id="+maxnum)
+			# conn.commit()
+		return redirect(url_for('home'))
 	return redirect(url_for('index'))
 
 @app.route('/category', methods=['GET', 'POST'])
