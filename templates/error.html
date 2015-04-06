@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sample | Category</title>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='foundation.min.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+	<div class="off-canvas-wrap" data-offcanvas>
+		<div class="inner-wrap">
+			<nav class="tab-bar">
+				<section class="left-small">
+					<a class="left-off-canvas-toggle menu-icon" ><span></span></a>
+				</section>
+
+				<section class="middle tab-bar-section">
+					<h1 class="title">CLOTHES ORGANIZER</h1>
+				</section>
+
+				<section class="right tab-bar-section">
+					<!-- <a class="right-off-canvas-toggle menu-icon"><span></span></a> -->
+				  	<a href="{{ url_for('logout') }}" class="tiny button">LOG OUT</a>
+				</section>
+			</nav>
+
+			<aside class="left-off-canvas-menu">
+				<ul class="off-canvas-list">
+					<li><label>CATEGORIES</label></li>
+					<li><a href="home?category=0">All Clothes</a></li>
+					
+					{% if categories %}
+						{% for category in categories: %}
+							<li><a href="?category={{ category.id }}">{{ category.name }}</a></li>
+						{% endfor %}
+					{% endif %}
+
+					<li><label>SETTINGS</label></li>
+					<li><a href="category">All Categories</li>
+				</ul>
+			</aside>
+
+			<section class="main-section">
+			<!-- content goes here -->
+				<br/>
+				<div class="row">
+					<div class="large-12 large-centered columns">
+						<div class="panel clearfix">
+							{% if error %}
+								<p class="text-center">{{ error }}</p>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<a class="exit-off-canvas"></a>
+
+		</div>
+	</div>
+
+	<script type=text/javascript src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+	<script type=text/javascript src="{{ url_for('static', filename='foundation.min.js') }}"></script>
+	<script type=text/javascript src="{{ url_for('static', filename='foundation.offcanvas.js') }}"></script>
+	<script>
+		$(document).foundation();
+	</script>
+
+</body>
+</html>
