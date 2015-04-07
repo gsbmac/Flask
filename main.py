@@ -1,14 +1,19 @@
 # from app import *
+import os, base64
 from backend import *
 import sqlite3, hashlib
 from flask import Flask, request, session, g, redirect, url_for, \
 	 abort, render_template, flash, redirect, escape
 from flaskext.mysql import MySQL
-import base64
+from werkzeug import secure_filename
+
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 # configuration
 mysql = MySQL()
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'password'
 app.config['MYSQL_DATABASE_DB'] = 'pr_db'
@@ -18,13 +23,8 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
 
-# @app.route('/')
-# def index():
-# 	cursor.execute("SELECT * from User where Username='" + username + "' and Password='" + password + "'")
-#     data = cursor.fetchone()
-#     if data is None:
-#      return "Username or Password is wrong"
-#     else:
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def index():
@@ -87,14 +87,18 @@ def home():
 	if 'username' in session:
 		success = None
 		category = request.args.get('category')
-		# cursor.execute('SELECT * FROM tb_user')
-		# users = [dict(id=row[0], username=row[1], password=row[2]) for row in cursor.fetchall()]
 
 		cursor.execute("SELECT * FROM tb_category")
-		categories = [dict(id=row[0], name=row[1], description=row[2]) for row in cursor.fetchall()]
+		categories = [dict(id=row[0], name=row[1], description=row[2], icon=row[3]) for row in cursor.fetchall()]
 
-		cursor.execute("SELECT * FROM tb_item ORDER BY id")
-		items = [dict(id=int(row[0]), name=row[1], description=row[2], tags=row[3], category=row[4], image=base64.b64encode(row[5])) for row in cursor.fetchall()]
+		for catid in categories:
+			if category == str(catid['id']):
+				cursor.execute("SELECT * FROM tb_item WHERE category="+category+" AND image IS NOT NULL ORDER BY id")
+				break
+			else:
+				cursor.execute("SELECT * FROM tb_item WHERE image IS NOT NULL ORDER BY id")
+
+		items = [dict(id=int(row[0]), name=row[1], description=row[2], tags=row[3], category=row[4], image=row[5]) for row in cursor.fetchall()]
 
 		if 'success' in session:
 			success = escape(session['success'])
@@ -122,19 +126,19 @@ def add_item():
 			params['description'] = str(request.form['description'])
 			params['tags'] = str(request.form['tags'])
 			params['category'] = request.form['category']
-			params['image'] = request.form['image']
-			# params['image'] = MySQLdb.escape_string(request.form['image'])
 
-			# filename = request.files['image']
-			# print "The image is %s"%params['image']
-			# cursor.execute("INSERT INTO tb_item (name,description,tags,category) VALUES('"+params['name']+"','"+params['description']+"','"+params['tags']+"','"+params['category']+"')")
-			# conn.commit()
+			files = request.files['image']
+			if files and allowed_file(files.filename):
+				filename = secure_filename(files.filename)
+				extension = filename.split(".")
+				filename = params['name']+params['description']+params['tags']+params['category']+filename
+				filename = base64.b16encode(filename)+"."+extension[len(extension)-1]
+				files.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-			# cursor.execute("SELECT MAX(id) FROM tb_item")
-			# maxnum = cursor.fetchone()
-			
-			# cursor.execute("UPDATE SET image=LOAD_FILE('"+filename+"') WHERE id="+maxnum)
-			# conn.commit()
+			cursor.execute("INSERT INTO tb_item (name,description,tags,category,image) \
+				VALUES('"+params['name']+"','"+params['description']+"','"+params['tags']+"','"+params['category']+"','uploads/"+filename+"')")
+			conn.commit()
+
 		return redirect(url_for('home'))
 	return redirect(url_for('index'))
 
@@ -142,9 +146,8 @@ def add_item():
 def category():
 	if 'username' in session:
 		cursor.execute("SELECT * FROM tb_category")
-		categories = [dict(id=row[0], name=row[1], description=row[2]) for row in cursor.fetchall()]
+		categories = [dict(id=row[0], name=row[1], description=row[2], icon=row[3]) for row in cursor.fetchall()]
 
-		# if request.method == 'POST':
 		return render_template('category.html', categories=categories)
 
 	return redirect(url_for('index'))

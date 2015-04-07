@@ -2,8 +2,7 @@
 <html>
 <head>
 	<title>Sample | Signup</title>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='foundation.min.css') }}">
-	<script type=text/javascript src="{{ url_for('static', filename='jquery.js') }}"></script>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/foundation.min.css') }}">
 </head>
 <body>
 
@@ -49,8 +48,9 @@
 		</div>
     </form>
 
-    <script type=text/javascript src="{{ url_for('static', filename='foundation.min.js') }}"></script>
-    <script type=text/javascript src="{{ url_for('static', filename='foundation.alert.js') }}"></script>
+    <script type=text/javascript src="{{ url_for('static', filename='scripts/jquery.min.js') }}"></script>
+    <script type=text/javascript src="{{ url_for('static', filename='scripts/foundation.min.js') }}"></script>
+    <script type=text/javascript src="{{ url_for('static', filename='scripts/foundation.alert.js') }}"></script>
 	<script>
 		$(document).foundation();
 	</script>

@@ -1,0 +1,46 @@
+html, body, .off-canvas-wrap, .inner-wrap, .main-section
+{
+  height: 100%;
+}
+
+.main-section {
+	overflow: auto;
+}
+
+input[type="text"], .button {
+	border: 0 0 1px 0 solid #eee;
+	margin: 0;
+}
+
+.image-thumbnail {
+	width: 250px;
+	height: 250px;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.image-category {
+	width: 50px;
+	height: 50px;
+	height: 50px;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.image-list {
+	width: 20px;
+	height: 20px;
+	float: left;
+	position: absolute;
+}
+
+p.tiny-text {
+	font-style: 10px;
+	margin: 0;
+	margin-bottom: 1px;
+}
+
+p.margin-left {
+	margin: 0;
+	margin-left: 30px;
+}

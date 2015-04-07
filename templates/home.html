@@ -2,8 +2,8 @@
 <html>
 <head>
 	<title>Sample | Home</title>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='foundation.min.css') }}">
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/foundation.min.css') }}">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
@@ -17,32 +17,36 @@
 				<section class="middle tab-bar-section">
 					<h1 class="title">CLOTHES ORGANIZER</h1>
 				</section>
-
-				<section class="right tab-bar-section">
-				  	<a href="{{ url_for('logout') }}" class="tiny button">LOG OUT</a>
-				</section>
 			</nav>
 
 			<aside class="left-off-canvas-menu">
 				<ul class="off-canvas-list">
 					<li><label>CATEGORIES</label></li>
-					<li><a href="home?category=0">All Clothes</a></li>
+					<li><a href="home">All Clothes</a></li>
 					
 					{% if categories %}
 						{% for category in categories: %}
-							<li><a href="?category={{ category.id }}">{{ category.name }}</a></li>
+							<li>
+								<a href="?category={{ category.id }}">
+									<img src="{{ url_for('static', filename=category.icon) }}" class="image-list">
+									<p class="margin-left">{{ category.name }}</p>
+								</a>
+							</li>
 						{% endfor %}
 					{% endif %}
 
 					<li><label>SETTINGS</label></li>
 					<li><a href="category">All Categories</a></li>
+					<li><label>ACCOUNT</label></li>
+					<li><a href="{{ url_for('logout') }}">Sign Out</a></li>
 				</ul>
 			</aside>
 
 			<section class="main-section">
 				<!-- content goes here -->
 				<br/>
-				<div class="row">
+				
+				<div class="row text-center">
 					{% if success %}
 						<div class="large-12 large-centered columns">
 							<div class="alert-box success">
@@ -52,44 +56,39 @@
 					{% endif %}
 					
 					<div class="large-12 large-centered columns">
-						<div class="row">
-							{% if items %}
-								{% for item in items %}
-									<div class="large-4 columns text-center">
-										<div class="panel radius">
-		  									<p>
-												<a class="th" href="">
-													<img src="data:image/jpeg;base64,{{ item.image }}" class="image-thumbnail">
-												</a>
-											</p>
-											<h5>{{ item.name }}</h5>
-											<!-- <p class="tiny-text">{{ item.description }}</p> -->
-											<p class="tiny-text">Tags: {{ item.tags }}</p>
-										</div>
-									</div>
-								{% endfor %}
-							{% endif %}
-
-							<a href="#" data-reveal-id="myModal">
-								<div class="large-4 columns text-center">
-									<div class="panel radius" id="add_icon">
-	  									<img src="{{ url_for('static', filename='plus.png') }}"  class="image-thumbnail" id="img_icon">
-									</div>
-								</div>
-							</a>
+						<div class="row text-center">
+							
+							<ul class="small-block-grid-2 large-block-grid-4 text-center">
+								{% if items %}
+									{% for item in items %}									
+										<li>
+											<img src="{{ url_for('static', filename=item.image) }}" class="th image-thumbnail">
+											<!-- <div style="margin:0;padding:0;position:absolute;top:0;width:25%;background-color:red;height:250px;border:1px solid #ddd;box-shadow:1px 1px 1px #eee;"> -->
+												<!-- {{ item.name }} -->
+											<!-- </div> -->
+										</li>
+										
+									{% endfor %}
+								{% endif %}
+									
+								<li id="add_icon"><a href="#" data-reveal-id="myModal">
+  									<img src="{{ url_for('static', filename='icons/plus.png') }}"  class="th image-thumbnail" id="img_icon">
+								</a></li>
+							</ul>
+							
 
 							<div id="myModal" class="reveal-modal" style="width:500px;" data-reveal>
-								<form action="add/item" method="POST">
+								<form action="add/item" method="POST" enctype="multipart/form-data">
 									<div class="row text-center">
 										<h3>Add an Item</h3>
 										<p class="tiny-text">Please fill up all fields.</p>
 										<div class="large-12 large-centered text-center">
 											<label class="text-left">Item Name</label>
-											<input type="text" name="name" required="true" placeholder="Name"/>
+											<input type="text" name="name" placeholder="Name"/>
 											<label class="text-left">Item Description</label>
-											<input type="text" name="description" placeholder="Description" required="true" />
+											<input type="text" name="description" placeholder="Description" />
 											<label class="text-left">Tags (separated by comma)</label>
-											<input type="text" name="tags" placeholder="Tags" required="true"  />
+											<input type="text" name="tags" placeholder="Tags"  />
 											<label class="text-left">Category</label>
 											<select name="category">
 												{% for category in categories %}
@@ -108,6 +107,7 @@
 						</div>
 					</div>
 				</div>
+				<br/>
 			</section>
 
 			<a class="exit-off-canvas"></a>
@@ -115,17 +115,17 @@
 		</div>
 	</div>
 
-	<script type=text/javascript src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-	<script type=text/javascript src="{{ url_for('static', filename='foundation.min.js') }}"></script>
-	<script type=text/javascript src="{{ url_for('static', filename='foundation.offcanvas.js') }}"></script>
-	<script type=text/javascript src="{{ url_for('static', filename='foundation.reveal.js') }}"></script>
+	<script type=text/javascript src="{{ url_for('static', filename='scripts/jquery.min.js') }}"></script>
+	<script type=text/javascript src="{{ url_for('static', filename='scripts/foundation.min.js') }}"></script>
+	<script type=text/javascript src="{{ url_for('static', filename='scripts/foundation.offcanvas.js') }}"></script>
+	<script type=text/javascript src="{{ url_for('static', filename='scripts/foundation.reveal.js') }}"></script>
 	<script>
 		$(document).foundation();
-		$(document).ready(function() {
-			columnW = $(".large-4").width();
-			columnH = $(".large-4").height();
-			$('#add_icon').css({"width":columnW, "height":columnH-"20", "display":"table-cell", "vertical-align":"middle", "padding":"0"})
-		});
+		// $(document).ready(function() {
+		// 	columnW = $(".large-4").width();
+		// 	columnH = $(".large-4").height();
+		// 	$('#add_icon').css({"width":columnW, "height":columnH-"20", "padding":"0"})
+		// });
 	</script>
 
 </body>
