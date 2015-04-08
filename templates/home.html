@@ -6,7 +6,8 @@
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-
+	<div class="login-container">
+	</div>
 	<div class="off-canvas-wrap" data-offcanvas>
 		<div class="inner-wrap">
 			<nav class="tab-bar">
@@ -58,7 +59,7 @@
 					<div class="large-12 large-centered columns">
 						<div class="row text-center">
 							
-							<ul class="small-block-grid-2 large-block-grid-4 text-center">
+							<ul class="large-block-grid-4 text-center">
 								{% if items %}
 									{% for item in items %}									
 										<li>
@@ -72,7 +73,7 @@
 								{% endif %}
 									
 								<li id="add_icon"><a href="#" data-reveal-id="myModal">
-  									<img src="{{ url_for('static', filename='icons/plus.png') }}"  class="th image-thumbnail" id="img_icon">
+  									<img src="{{ url_for('static', filename='icons/plus3.jpg') }}"  class="th image-thumbnail" id="img_icon">
 								</a></li>
 							</ul>
 							
@@ -107,11 +108,10 @@
 						</div>
 					</div>
 				</div>
-				<br/>
+				<br/><br/>
 			</section>
 
 			<a class="exit-off-canvas"></a>
-
 		</div>
 	</div>
 
@@ -121,11 +121,10 @@
 	<script type=text/javascript src="{{ url_for('static', filename='scripts/foundation.reveal.js') }}"></script>
 	<script>
 		$(document).foundation();
-		// $(document).ready(function() {
-		// 	columnW = $(".large-4").width();
-		// 	columnH = $(".large-4").height();
-		// 	$('#add_icon').css({"width":columnW, "height":columnH-"20", "padding":"0"})
-		// });
+		$(document).ready(function() {
+			// columnW = $("ul.large-block-grid-4 li").width();
+			// $('.image-thumbnail').css({"height":columnW+"20", "padding":"0"});
+		});
 	</script>
 
 </body>

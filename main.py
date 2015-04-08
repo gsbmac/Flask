@@ -127,6 +127,7 @@ def add_item():
 			params['tags'] = str(request.form['tags'])
 			params['category'] = request.form['category']
 
+			filename = ""
 			files = request.files['image']
 			if files and allowed_file(files.filename):
 				filename = secure_filename(files.filename)
